@@ -15,7 +15,6 @@ public class Minimap : MonoBehaviour
         Vector2 playerPos = new Vector2(player.position.x, player.position.z);
 
         // Normalize player position in the game world relative to map size
-        //Vector2 normalizedPos = (playerPos + new Vector2(mapSize / 2, mapSize / 2)) / mapSize;
         Vector2 normalizedPos = playerPos / mapSize;
 
         // Update the minimap position based on the player's position
@@ -26,5 +25,8 @@ public class Minimap : MonoBehaviour
 
         // Apply zoom by adjusting the minimap size (localScale)
         minimapImage.localScale = new Vector3(zoomFactor, zoomFactor, 1f);
+
+        // Rotate the minimap to match the player's rotation (Y-axis)
+        //minimapImage.rotation = Quaternion.Euler(0, 0, player.rotation.eulerAngles.y);
     }
 }
