@@ -3,27 +3,43 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+using System.Collections.Generic;
+using System.Text;
+
 public class VisualTextBlock : MonoBehaviour
 {
-    public TextBlock display;
+    public List<IDisplay> displays;
 
     public TextMeshProUGUI text;
 
+    public VisualTextBlock()
+    {
+        this.displays = new();
+    }
+
     public void Start()
     {
-        //this.display = new();
+        //this.displays = new();
+    }
+
+    public void RegisterDisplay(IDisplay display)
+    {
+        this.displays.Add(display);
     }
 
     public void Update()
     {
-        text.text = (string) display.GetContent();
+        if (displays.Count > 0)
+            this.gameObject.GetComponent<RectTransform>().anchoredPosition = displays[0].Transform().anchoredPosition;
 
-        float x = display.Transform().x;
-        float y = display.Transform().y;
+        StringBuilder sb = new();
 
-        this.gameObject.transform.position = new Vector3
-        (
-            x, y, this.gameObject.transform.position.z
-        );
+        foreach (IDisplay display in displays)
+        {
+            sb.Append((string) display.GetContent());
+            sb.Append("\n");
+        }
+
+        this.text.text = sb.ToString();
     }
 }

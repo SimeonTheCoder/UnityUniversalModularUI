@@ -1,14 +1,15 @@
 ﻿using System.Diagnostics;
+using UnityEngine;
 
 public class TextBlock : IDisplay
 {
     private string text;
-    private UITransform transform;
+    private RectTransform transform;
 
     public TextBlock ()
     {
         this.text = string.Empty;
-        this.transform = new(0f, 0f);
+        this.transform = new RectTransform();
 
         this.Refresh();
     }
@@ -28,13 +29,13 @@ public class TextBlock : IDisplay
         
     }
 
-    public void SetTransform(UITransform transform)
+    public void SetTransform(RectTransform transform)
     {
         this.transform = transform;
         //this.Refresh();
     }
 
-    public UITransform Transform()
+    public RectTransform Transform()
     {
         return this.transform;
     }
