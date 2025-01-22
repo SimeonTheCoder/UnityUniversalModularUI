@@ -1,10 +1,12 @@
-﻿public interface IDisplay
+﻿using UnityEngine;
+
+public interface IDisplay
 {
     void Refresh();
 
-    UITransform Transform();
+    RectTransform Transform();
 
-    void SetTransform (UITransform transform);
+    void SetTransform (RectTransform transform);
 
     void UpdateContent (string message);
 
