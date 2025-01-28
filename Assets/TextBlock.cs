@@ -6,12 +6,17 @@ public class TextBlock : IDisplay
     private string text;
     private RectTransform transform;
 
+    private float time;
+    private bool timeTicking;
+
+    public float Duration { get; set; }
+
     public TextBlock ()
     {
         this.text = string.Empty;
         this.transform = new RectTransform();
 
-        this.Refresh();
+        this.Refresh(0);
     }
 
     public void Destroy()
@@ -24,15 +29,15 @@ public class TextBlock : IDisplay
         this.text = message;
     }
 
-    public void Refresh()
+    public void Refresh (float deltaTime)
     {
-        
+        if (timeTicking) this.time += deltaTime;
     }
 
     public void SetTransform(RectTransform transform)
     {
         this.transform = transform;
-        //this.Refresh();
+        this.Refresh(0);
     }
 
     public RectTransform Transform()
@@ -43,5 +48,31 @@ public class TextBlock : IDisplay
     public object GetContent()
     {
         return this.text;
+    }
+
+    public void ResumeTime()
+    {
+        this.timeTicking = true;
+    }
+
+    //This is the same type of stand as Star Platinum
+    public void PauseTime()
+    {
+        this.timeTicking = false;
+    }
+
+    public float GetTime()
+    {
+        return this.time;
+    }
+
+    public void SetTime(float time)
+    {
+        this.time = time;
+    }
+
+    public float GetDuration()
+    {
+        return this.Duration;
     }
 }

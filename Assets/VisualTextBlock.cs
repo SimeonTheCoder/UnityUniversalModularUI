@@ -8,13 +8,24 @@ using System.Text;
 
 public class VisualTextBlock : MonoBehaviour
 {
-    public List<IDisplay> displays;
+    private const float AppearDuration = 1f;
+    private const float DisappearDuration = 2f;
+
+    private const float AppearInterpolationPower = 3f;
+    private const float DisappearInterpolationPower = 0.3f;
+
+    private const float MoveAmount = 50f;
+
+    public IDisplay display;
 
     public TextMeshProUGUI text;
 
+    private Vector2 offset;
+
     public VisualTextBlock()
     {
-        this.displays = new();
+        //this.display = new();
+        this.offset = Vector2.zero;
     }
 
     public void Start()
@@ -24,22 +35,49 @@ public class VisualTextBlock : MonoBehaviour
 
     public void RegisterDisplay(IDisplay display)
     {
-        this.displays.Add(display);
+        this.display = display;
+    }
+
+    private Vector2 GetOffsetFromTime(float time)
+    {
+        Vector2 offset;
+
+        float duration = display.GetDuration();
+
+        float disappearStartTime = duration - DisappearDuration;
+
+        if (time > disappearStartTime)
+        {
+            float factor = (time - disappearStartTime) / DisappearDuration;
+            float t = Mathf.Pow(factor, AppearInterpolationPower);
+
+            offset = new Vector2(0, t * MoveAmount);
+
+            this.gameObject.SetActive(time < duration);
+        }
+        else if (time < AppearDuration)
+        {
+            float factor = time;
+            float t = Mathf.Pow(factor, DisappearInterpolationPower);
+
+            offset = new Vector2(0, MoveAmount - t * MoveAmount);
+        }
+        else
+        {
+            offset = Vector2.zero;
+        }
+
+        return offset;
     }
 
     public void Update()
     {
-        if (displays.Count > 0)
-            this.gameObject.GetComponent<RectTransform>().anchoredPosition = displays[0].Transform().anchoredPosition;
+        if (display == null) return;
 
-        StringBuilder sb = new();
+        this.gameObject.GetComponent<RectTransform>().anchoredPosition = display.Transform().anchoredPosition + offset;
 
-        foreach (IDisplay display in displays)
-        {
-            sb.Append((string) display.GetContent());
-            sb.Append("\n");
-        }
+        offset = GetOffsetFromTime(display.GetTime());
 
-        this.text.text = sb.ToString();
+        this.text.text = (string) display.GetContent();
     }
 }

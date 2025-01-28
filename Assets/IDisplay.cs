@@ -2,7 +2,7 @@
 
 public interface IDisplay
 {
-    void Refresh();
+    void Refresh(float deltaTime);
 
     RectTransform Transform();
 
@@ -13,4 +13,14 @@ public interface IDisplay
     object GetContent();
 
     void Destroy();
+
+    void ResumeTime();
+
+    void PauseTime();
+
+    void SetTime (float time);
+
+    float GetTime();
+
+    float GetDuration();
 }

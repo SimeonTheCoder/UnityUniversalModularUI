@@ -80,6 +80,7 @@
     <Compile Include="Assets\TextBlock.cs" />
     <Compile Include="Assets\Minimap.cs" />
     <Compile Include="Assets\AmplifyOcclusion\Plugins\AmplifyOcclusionCommon.cs" />
+    <Compile Include="Assets\PopUp.cs" />
     <Compile Include="Assets\UIQuest.cs" />
     <Compile Include="Assets\Invector-3rdPersonController_LITE\Scripts\Generic\Utils\vExtensions.cs" />
     <Compile Include="Assets\UISystem.cs" />

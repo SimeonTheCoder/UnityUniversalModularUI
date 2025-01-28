@@ -4,18 +4,26 @@ public class UISystem
 {
     private UIQuestSystem questManager;
 
+    private PopUp popUp;
+    public TextBlock popUpTextBlock;
+
     public UISystem()
     {
         this.questManager = new();
+
+        this.popUpTextBlock = new TextBlock();
     }
 
-    public void Update()
+    public void Update(float deltaTime)
     {
         foreach (var quest in questManager.GetQuests())
         {
             quest.Value.UpdateContent(quest.Key.ToString());
-            quest.Value.Refresh();
+            quest.Value.Refresh(deltaTime);
         }
+
+        this.popUpTextBlock.UpdateContent(popUp.Message);
+        this.popUpTextBlock.Refresh(deltaTime);
     }
 
     public void AddQuest (UIQuest quest)
@@ -31,5 +39,13 @@ public class UISystem
     public Dictionary<UIQuest, IDisplay> GetQuests ()
     {
         return this.questManager.GetQuests();
+    }
+
+    public void UpdatePopUp (PopUp popUp)
+    {
+        this.popUpTextBlock.SetTime(0);
+        this.popUpTextBlock.Duration = popUp.Duration;
+
+        this.popUp = popUp;
     }
 }
