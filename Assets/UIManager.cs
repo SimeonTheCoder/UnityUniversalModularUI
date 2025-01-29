@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
     private UISystem system;
 
     private VisualTextBlock popUpBlock;
+    private VisualTextBlock currBlock;
 
     private int timer;
 
@@ -37,13 +38,52 @@ public class UIManager : MonoBehaviour
 
         currTextBlock.RegisterDisplay(questDisplay);
         currTextBlock.transform.SetParent(canvas.transform);
+
+        this.currBlock = currTextBlock;
+    }
+
+    public void AddQuest(UIQuest quest, Vector2 offset)
+    {
+        quests.Add(quest);
+        system.AddQuest(quest);
+
+        VisualTextBlock currTextBlock = Instantiate(uiElements[0]).GetComponent<VisualTextBlock>();
+
+        TextBlock questDisplay = (TextBlock)system.GetQuests().Last().Value;
+
+        RectTransform og = positions[0].GetComponent<RectTransform>();
+
+        RectTransform pos = Instantiate(og, og.parent);
+        pos.anchoredPosition = og.anchoredPosition;
+        pos.sizeDelta = og.sizeDelta;
+        pos.anchorMin = og.anchorMin;
+        pos.anchorMax = og.anchorMax;
+        pos.pivot = og.pivot;
+        pos.rotation = og.rotation;
+        pos.localScale = og.localScale;
+        //pos.anchoredPosition = positions[0].GetComponent<RectTransform>().anchoredPosition;
+        pos.anchoredPosition += offset;
+
+        questDisplay.SetTransform(pos);
+        questDisplay.Duration = 5;
+
+        currTextBlock.RegisterDisplay(questDisplay);
+        currTextBlock.transform.SetParent(canvas.transform);
+    }
+
+    public void RemoveQuest(UIQuest quest)
+    {
+        quests.Remove(quest);
+        system.RemoveQuest(quest);
+
+        Destroy(this.currBlock.gameObject);
+        this.currBlock = null;
     }
 
     public void SetPopUp (PopUp popUp)
     {
         popUpBlock.gameObject.SetActive(true);
         system.UpdatePopUp(popUp);
-        Debug.Log(popUp.Duration);
     }
 
     public void Start()
@@ -57,26 +97,15 @@ public class UIManager : MonoBehaviour
         this.popUpBlock.display.ResumeTime();
 
         this.popUpBlock.transform.SetParent(canvas.transform);
-
-        AddQuest(new UIQuest("Welcome", "Nigerundayo!"));
-        SetPopUp(new PopUp("NEW QUEST: Press V 10 times"));
     }
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            timer++;
-        }
-
-        quests[0].Description = "Test: " + timer;
         system.Update(Time.deltaTime);
+    }
 
-        if (timer == 10)
-        {
-            SetPopUp(new PopUp("Quest complete: Press V 10 times"));
-            timer++;
-            ((TextBlock) system.GetQuests().Last().Value).ResumeTime();
-        }
+    public UIQuest GetQuest(int id)
+    {
+        return quests[id];
     }
 }
