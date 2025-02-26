@@ -4,7 +4,7 @@ public class ForceMeter : MonoBehaviour
 {
     public GameObject bar_bottom;
     public GameObject bar_top; 
-    public Material lineMaterial; 
+    public Material lineMaterial;
 
     private LineRenderer lineRenderer;
 
@@ -14,8 +14,13 @@ public class ForceMeter : MonoBehaviour
 
     private bool goUp = false;
 
+    public bool inverse;
+
     public bool spamTurn = false;
     public bool holdTurn = false;
+
+    public bool freezeOnDrop;
+    public bool freezeOnReach;
     
 
     void Start()
@@ -33,6 +38,8 @@ public class ForceMeter : MonoBehaviour
         {
             lineRenderer.material = lineMaterial;
         }
+
+        this.bar_top.transform.position = this.bar_bottom.transform.position;
     }
 
     void Update()
@@ -67,10 +74,14 @@ public class ForceMeter : MonoBehaviour
 
                 if (bar_top.transform.position.y < bar_bottom.transform.position.y + maxHeightAboveBar)
                 {
-                    bar_top.transform.position += Vector3.up * moveSpeed;
+                    bar_top.transform.position += Vector3.up * moveSpeed * 10;
                     Debug.Log("NATISKASH ME");
                 }
-
+                else if (freezeOnReach)
+                {
+                    moveSpeed = 0;
+                    fallSpeed = 0;
+                }
             }
             else
             {
@@ -85,31 +96,42 @@ public class ForceMeter : MonoBehaviour
             spamTurn = false;
             //hold to move
 
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0) == !inverse)
             {
-
                 if (bar_top.transform.position.y < bar_bottom.transform.position.y + maxHeightAboveBar)
                 {
-
                     bar_top.transform.position += Vector3.up * moveSpeed;
                     Debug.Log("2");
-
                 }
+                else
+                {
+                    if (freezeOnReach)
+                    {
+                        moveSpeed = 0;
+                        fallSpeed = 0;
+                    }
 
+                    moveSpeed = -moveSpeed;
+                    bar_top.transform.position += Vector3.up * moveSpeed;
+                }
             }
             else
             {
+                if (freezeOnDrop) moveSpeed = 0;
 
                 if (bar_top.transform.position.y > bar_bottom.transform.position.y)
                 {
                     bar_top.transform.position -= Vector3.up * fallSpeed;
                 }
-
             }
         }
 
+        if (moveSpeed < 0 && bar_top.transform.position.y < bar_bottom.transform.position.y)
+            moveSpeed = -moveSpeed;
+
 
         // Manual movement with keys
+        /*
         if (Input.GetKey(KeyCode.B) && bar_top.transform.position.y < bar_bottom.transform.position.y + maxHeightAboveBar)
         {
             bar_top.transform.position += Vector3.up * moveSpeed;
@@ -119,6 +141,7 @@ public class ForceMeter : MonoBehaviour
         {
             bar_top.transform.position -= Vector3.up * moveSpeed;
         }
+        */
 
         // Calculate progress (0 to 1)
         float currentHeight = bar_top.transform.position.y - bar_bottom.transform.position.y;

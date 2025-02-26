@@ -42,8 +42,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 13
-  m_BakeOnSceneLoad: 0
+  serializedVersion: 12
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -665,11 +664,14 @@ MonoBehaviour:
   bar_bottom: {fileID: 669812074}
   bar_top: {fileID: 1892565957}
   lineMaterial: {fileID: 2100000, guid: dfe8fca3d75dcc04a944e5cb298847bd, type: 2}
-  moveSpeed: 1
-  fallSpeed: 0
-  maxHeightAboveBar: 170
-  spamTurn: 0
+  moveSpeed: 3
+  fallSpeed: 0.2
+  maxHeightAboveBar: 510
+  inverse: 0
+  spamTurn: 1
   holdTurn: 0
+  freezeOnDrop: 0
+  freezeOnReach: 1
 --- !u!4 &812215960
 Transform:
   m_ObjectHideFlags: 0
